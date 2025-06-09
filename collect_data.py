@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 import os
 
-LABEL = "Hello"  # Change this to the label you're recording
+LABEL = "FATHER"  # Change this to the label you're recording
 SEQUENCE_LENGTH = 30
 SAVE_DIR = "data"
 
@@ -15,9 +15,10 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 def extract_keypoints(results):
-    if results.pose_landmarks:
-        return np.array([[res.x, res.y, res.z] for res in results.pose_landmarks.landmark]).flatten()
-    return np.zeros(33 * 3)
+    pose = np.array([[res.x, res.y, res.z] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33 * 3)
+    left_hand = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21 * 3)
+    right_hand = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21 * 3)
+    return np.concatenate([pose, left_hand, right_hand])
 
 cap = cv2.VideoCapture(0)
 
@@ -33,6 +34,9 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
+        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+
         keypoints = extract_keypoints(results)
         sequence.append(keypoints)
 

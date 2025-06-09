@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 DATA_DIR = 'data'
-SEQUENCE_LENGTH = 30  # Adjust based on your recording length
+SEQUENCE_LENGTH = 30
 
 def load_sequences(data_dir):
     X = []
@@ -34,7 +34,6 @@ def load_sequences(data_dir):
             X.append(sequence)
             y.append(label_idx)
 
-    # Save label map
     with open("label_map.json", "w") as f:
         json.dump(label_map, f)
 
