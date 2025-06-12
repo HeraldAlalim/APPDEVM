@@ -6,7 +6,7 @@ import mediapipe as mp
 
 DATA_DIR = 'data'
 SEQUENCE_LENGTH = 30
-label = 'THANK YOU'  # Change this for different signs
+label = 'THANK YOU'  # Change this assaafor different signs
 
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
